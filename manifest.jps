@@ -24,6 +24,6 @@
         ]
     }],
     "onInstall": {
-        "cmd[cp]": "docker run -t -v /var/run/docker.sock:/var/run/docker.sock -v /data:/data -e CHE_PORT=80 eclipse/che start &>> /var/log/run.log"
+        "cmd[cp]": "docker run -t -v /var/run/docker.sock:/var/run/docker.sock -v /data:/data -e CHE_PORT=80 -e CHE_HOST={nodes.cp.first.address} eclipse/che start &>> /var/log/run.log"
     }
 }
