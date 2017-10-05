@@ -13,7 +13,6 @@
         "text": "Use Che as an IDE for any framework or programming language. Take your projects and runtimes anywhere with workspace portability and cloud export.",
         "short": "Eclipse Che is a Next-Generation Cloud IDE "
     },
-    "ssl": true,
     "nodes": [{
         "cloudlets": 32,
         "displayName": "Eclipse Che",
