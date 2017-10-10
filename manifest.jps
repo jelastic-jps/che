@@ -18,7 +18,7 @@
         "displayName": "Eclipse Che",
         "image": "jelastic/docker-ce",
         "nodeGroup": "cp",
-        "extip": "false",
+        "extip": "true",
         "volumes": [
             "/data"
         ]
