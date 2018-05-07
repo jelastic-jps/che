@@ -1,6 +1,6 @@
 {
   "jpsType": "install",
-  "jpsVersion": "0.99",
+  "jpsVersion": "1.4.2",
   "id": "eclipse-che",
   "name": "Eclipse Che",
   "logo": "https://github.com/jelastic-jps/che/raw/master/images/eclipse-che-logo.png",
