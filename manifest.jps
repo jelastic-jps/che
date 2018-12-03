@@ -23,6 +23,7 @@ nodes:
     JELASTIC_EXPOSE: false
   volumes:
     - /data
+  extip: true
     
 onBeforeInit: |  
   var resp = jelastic.billing.account.GetQuotas(appid, session, 'environment.jelasticssl.enabled');
