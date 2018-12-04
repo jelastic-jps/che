@@ -24,13 +24,8 @@ nodes:
   volumes:
     - /data
   extip: true
-    
-onBeforeInit: |  
-  var resp = jelastic.billing.account.GetQuotas(appid, session, 'environment.jelasticssl.enabled');
-  if (resp.result != 0 ) return resp;  
-  return  { result: 0, ssl: !!resp.array[0].value };
   
 onInstall:
   cmd[cp]: docker run -t --rm -v /var/run/docker.sock:/var/run/docker.sock -v /data:/data
-    -e CHE_PORT=80 -e CHE_HOST=${nodes.cp.master.address} eclipse/che start &>>
+    -e CHE_PORT=80 -e CHE_HOST=${env.domain} eclipse/che start &>>
     /var/log/run.log
