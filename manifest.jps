@@ -1,9 +1,9 @@
----
 jpsType: install
 jpsVersion: 0.99
 id: eclipse-che
 name: Eclipse Che
 logo: https://github.com/jelastic-jps/che/raw/master/images/eclipse-che-logo.png
+requiredFeatures: extip
 categories:
 - apps/dev-and-admin-tools
 - apps/dev-tools
