@@ -14,6 +14,30 @@ description:
     and runtimes anywhere with workspace portability and cloud export.
   short: Eclipse Che is a Next-Generation Cloud IDE
 
+onBeforeInit: |  
+  var url = "https://registry.hub.docker.com/v1/repositories/eclipse/che/tags";
+  var tags = toNative(new com.hivext.api.core.utils.Transport().get(url)).sort();
+  var ver = {},
+      def = "";
+  for (var i = 0; i < tags.length; i++) {
+      ver[tags[i].name] = tags[i].name;
+      if (tags[i].name > def) def = tags[i].name;
+  }
+  
+  return {
+    result:0, 
+    settings: {
+      fields: [{
+          name: "version",
+          caption: "Che Version",
+          type: "list",
+          values: ver,
+          "default": def
+      }]    
+    }
+  }
+  
+ssl: false
 nodes:
 - cloudlets: 32
   displayName: Eclipse Che
@@ -27,5 +51,4 @@ nodes:
   
 onInstall:
   cmd[cp]: docker run -t --rm -v /var/run/docker.sock:/var/run/docker.sock -v /data:/data
-    -e CHE_PORT=80 -e CHE_HOST=${env.domain} eclipse/che start &>>
-    /var/log/run.log
+    -e CHE_PORT=80 -e CHE_HOST=${env.domain} eclipse/che:${settings.version} start &>> /var/log/run.log
