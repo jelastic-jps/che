@@ -1,6 +1,7 @@
 type: install
 id: eclipse-che
 name: Eclipse Che
+version: 1.7
 logo: https://github.com/jelastic-jps/che/raw/master/images/eclipse-che-logo.png
 requiredFeatures: extip
 categories:
