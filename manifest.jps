@@ -50,7 +50,7 @@ ssl: false
 nodes:
 - cloudlets: 32
   displayName: Eclipse Che
-  image: jelastic/docker-ce
+  nodeType: dockerengine
   nodeGroup: cp
   env:
     JELASTIC_EXPOSE: false
