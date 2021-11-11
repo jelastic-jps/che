@@ -15,36 +15,46 @@ description:
   short: Eclipse Che is a Next-Generation Cloud IDE
 
 onBeforeInit: |  
-  var url = "https://registry.hub.docker.com/v1/repositories/eclipse/che/tags";
-  var tags = toNative(new com.hivext.api.core.utils.Transport().get(url)).sort();
-  var ver = {},
-      def = "", defArr = null;
+  var url = "https://registry.hub.docker.com/v1/repositories/eclipse/che/tags",
+      tags = toNative(new com.hivext.api.core.utils.Transport().get(url)).sort(),
+      quotas = jelastic.billing.account.GetQuotas('environment.maxcloudletsperrec').array,
+      settings = jps.settings || {},
+      fields = settings.fields || [],
+      minCloudlets = 16,
+      defArr = null,
+      ver = {},
+      def = "";
+
   for (var i = 0; i < tags.length; i++) {
-      var name = tags[i].name;
-      ver[name] = name;
-      if (!/rc|beta|alpha|latest/i.test(name)) {
-        var arr = name.split(".");
-        for (var j = 0; j < arr.length; j++) arr[j] = parseInt(arr[j], 10)
-        if (!defArr || defArr[0] < arr[0]) {def = name; defArr = arr;} else if (defArr[0] > arr[0]) continue; else {
-          if (defArr[1] < arr[1]) {def = name; defArr = arr;} else if (defArr[1] > arr[1]) continue; else {
-            if (defArr[2] < arr[2]) {def = name; defArr = arr;}
-          }
+    var name = tags[i].name;
+    ver[name] = name;
+    if (!/rc|beta|alpha|latest/i.test(name)) {
+      var arr = name.split(".");
+      for (var j = 0; j < arr.length; j++) arr[j] = parseInt(arr[j], 10)
+      if (!defArr || defArr[0] < arr[0]) {def = name; defArr = arr;} else if (defArr[0] > arr[0]) continue; else {
+        if (defArr[1] < arr[1]) {def = name; defArr = arr;} else if (defArr[1] > arr[1]) continue; else {
+          if (defArr[2] < arr[2]) {def = name; defArr = arr;}
         }
       }
-  }
-  
-  return {
-    result:0, 
-    settings: {
-      fields: [{
-          name: "version",
-          caption: "Che Version",
-          type: "list",
-          values: ver,
-          "default": def
-      }]    
     }
   }
+  fields.push({
+    name: "version",
+    caption: "Che Version",
+    type: "list",
+    values: ver,
+    "default": def
+  });
+  
+  var q = quotas[0], n = toNative(q.quota.name);
+  if (n == 'environment.maxcloudletsperrec' && q.value < minCloudlets) {
+    fields.push(
+      {"type": "compositefield","height": 0,"hideLabel": true,"width": 0,"items": [{"height": 0,"type": "string","required": true}]}
+    );
+  };  
+  
+  settings.fields = fields;
+  return { result: 0, settings: settings };
   
 ssl: false
 nodes:
