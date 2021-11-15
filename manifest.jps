@@ -69,5 +69,8 @@ nodes:
   extip: true
   
 onInstall:
-  cmd[cp]: docker run -t --rm -v /var/run/docker.sock:/var/run/docker.sock -v /data:/data
+  cmd[cp]: |-
+    service network restart
+    echo 1 > /proc/sys/net/ipv4/ip_forward
+    docker run -t --rm -v /var/run/docker.sock:/var/run/docker.sock -v /data:/data
     -e CHE_PORT=80 -e CHE_HOST=${env.domain} eclipse/che:${settings.version} start &>> /var/log/run.log
