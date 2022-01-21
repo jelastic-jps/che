@@ -20,6 +20,7 @@ onBeforeInit: |
       quotas = jelastic.billing.account.GetQuotas('environment.maxcloudletsperrec').array,
       settings = jps.settings || {},
       fields = settings.fields || [],
+      optimalCloudlets = 32,
       minCloudlets = 16,
       defArr = null,
       ver = {},
@@ -47,19 +48,27 @@ onBeforeInit: |
   });
   
   var q = quotas[0], n = toNative(q.quota.name);
-  if (n == 'environment.maxcloudletsperrec' && q.value < minCloudlets) {
-    fields.push(
-      {"type": "compositefield","height": 0,"hideLabel": true,"width": 0,"items": [{"height": 0,"type": "string","required": true}]}
-    );
-  };  
+  if (n == 'environment.maxcloudletsperrec') {
+    if (q.value < optimalCloudlets) {
+      if (q.value < minCloudlets) {
+      fields.push(
+        {"type": "compositefield","height": 0,"hideLabel": true,"width": 0,"items": [{"height": 0,"type": "string","required": true}]},
+        {"type": "displayfield", "cls": "warning", "height": 50, "hideLabel": true, "markup": "Eclipse Che JPS installation is not available due to account limits, quota - " + n + ", value - " + q.value + ". Please upgrade your account or contact us to extend the possibilities."}
+      );
+    } else {
+      fields.push(
+        {"type": "displayfield", "cls": "warning", "height": 40, "hideLabel": true, "markup": "Due to account limits, the environment will be created: with " + q.value + " cloudlet(s) per server instead of required " + optimalCloudlets + ". Please note that this can influence its operability. Contact us to extend the possibilities."}
+      );
+    }
+    }
+  }
   
   settings.fields = fields;
   return { result: 0, settings: settings };
   
 ssl: false
 nodes:
-- cloudlets: 32
-  displayName: Eclipse Che
+- displayName: Eclipse Che
   nodeType: dockerengine
   nodeGroup: cp
   env:
