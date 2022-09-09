@@ -15,9 +15,24 @@ description:
   short: Eclipse Che is a Next-Generation Cloud IDE
 
 onBeforeInit: |  
-  var url = "https://registry.hub.docker.com/v1/repositories/eclipse/che/tags",
-      tags = toNative(new com.hivext.api.core.utils.Transport().get(url)).sort(),
-      quotas = jelastic.billing.account.GetQuotas('environment.maxcloudletsperrec').array,
+  import org.apache.commons.httpclient.HttpClient;
+  import org.apache.commons.httpclient.methods.GetMethod;
+
+  var client = new HttpClient(),
+      getMethod,
+      status,
+      resp,
+      url;
+  
+  url = "https://registry.hub.docker.com/v2/repositories/eclipse/che/tags";
+  getMethod = new GetMethod(url);
+  status = client.executeMethod(getMethod);
+  resp = getMethod.getResponseBodyAsString();
+  resp = JSON.parse(resp);
+  tags = resp.results;
+
+
+  var quotas = jelastic.billing.account.GetQuotas('environment.maxcloudletsperrec').array,
       settings = jps.settings || {},
       fields = settings.fields || [],
       optimalCloudlets = 32,
