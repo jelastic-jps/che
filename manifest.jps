@@ -44,7 +44,7 @@ onBeforeInit: |
   for (var k = 0; k < tags.length; k++) {
     var name = tags[k].name;
     ver[name] = name;
-    if (!/^rc$|^beta$|^alpha$|^latest$|^7.0.0-RC-1.1$/i.test(name)) {
+    if (!/^rc$|^beta$|^alpha$|^latest$|^7.0.0-RC-1.1|^7.0.0-RC-2.0$/i.test(name)) {
       var arr = name.split(".");
       for (var j = 0; j < arr.length; j++) arr[j] = parseInt(arr[j], 10)
       if (!defArr || defArr[0] < arr[0]) {def = name; defArr = arr;} else if (defArr[0] > arr[0]) continue; else {
